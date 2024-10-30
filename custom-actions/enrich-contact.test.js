@@ -206,6 +206,66 @@ describe("Email enrichment", () => {
       },
       callback
     );
+
+    expect(callback).toHaveBeenCalledWith({
+      outputFields: {
+        isPerson: true,
+        isCompany: true,
+        personSummary:
+          "Co-chair of the Bill & Melinda Gates Foundation. Founder of Breakthrough Energy. Co-founder of Microsoft. Voracious reader. Avid traveler. Active blogger.",
+        personFirstName: "Bill",
+        personLastName: "Gates",
+        personFollowerCount: 35415,
+        personLocation: "Seattle, Washington, United States of America",
+        personLinkedInUrl: "https://www.linkedin.com/in/williamhgates",
+        companyName: "Microsoft",
+        companyEmployeeCount: 228581,
+        companyFollowerCount: 22736947,
+        companySpecialities:
+          "Business Software, Developer Tools, Home & Educational Software, Tablets, Search, Advertising, Servers, Windows Operating System, Windows Applications & Platforms, Smartphones, Cloud Computing, Quantum Computing, Future of Work, Productivity, AI, Artificial Intelligence, Machine Learning, Laptops, Mixed Reality, Virtual Reality, Gaming, Developers, IT Professional"
+      }
+    });
+  });
+
+  it("should return empty owner", async () => {
+    const callback = jest.fn();
+
+    // moking the response to return an empty object
+    axios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        data: {
+          person: null,
+          company: null
+        }
+      })
+    );
+
+    await main(
+      {
+        fields: {
+          senderEmail: "noemail@gmail.com",
+          senderName: "No Name"
+        }
+      },
+      callback
+    );
+
+    expect(callback).toHaveBeenCalledWith({
+      outputFields: {
+        isPerson: false,
+        isCompany: false,
+        personSummary: "",
+        personFirstName: "",
+        personLastName: "",
+        personFollowerCount: 0,
+        personLocation: "",
+        personLinkedInUrl: "",
+        companyName: "",
+        companyEmployeeCount: 0,
+        companyFollowerCount: 0,
+        companySpecialities: ""
+      }
+    });
   });
 
   it("should throw an error if email is not provided", async () => {

@@ -16,16 +16,26 @@ exports.main = async (event, callback) => {
 
   callback({
     outputFields: {
-      personSummary: person.summary,
-      companyName: company.name
+      isPerson: !!person,
+      isCompany: !!company,
+      personSummary: person?.summary || "",
+      personFirstName: person?.firstName || "",
+      personLastName: person?.lastName || "",
+      personFollowerCount: person?.followerCount || 0,
+      personLocation: person?.location || "",
+      personLinkedInUrl: person?.linkedInUrl || "",
+      companyName: company?.name || "",
+      companyEmployeeCount: company?.employeeCount || 0,
+      companyFollowerCount: company?.followerCount || 0,
+      companySpecialities: company?.specialities?.length
+        ? company?.specialities.join(", ")
+        : ""
     }
   });
 };
 
 async function getEmailOwner(email, name) {
-  const apiKey =
-    process.env.REVERSE_CONTACT_API_KEY ||
-    "sk_live_6721e0228054bf07fe952195_key_ihpd3y4y4js";
+  const apiKey = process.env.REVERSE_CONTACT_API_KEY;
 
   const { firstName, lastName } = getFirstNameLastNameFromName(name);
 
