@@ -1,8 +1,8 @@
 const axios = require("axios");
 
 exports.main = async (event, callback) => {
-  const email = event?.fields?.senderEmail;
-  const name = event?.fields?.senderName;
+  const email = event?.inputFields?.senderEmail;
+  const name = event?.inputFields?.senderName;
 
   if (!email) {
     console.error("There is no email in the input fields");
@@ -27,7 +27,7 @@ exports.main = async (event, callback) => {
       companyName: company?.name || "",
       companyEmployeeCount: company?.employeeCount || 0,
       companyFollowerCount: company?.followerCount || 0,
-      companySpecialities: company?.specialities?.length
+      companySpecialties: company?.specialities?.length
         ? company?.specialities.join(", ")
         : ""
     }

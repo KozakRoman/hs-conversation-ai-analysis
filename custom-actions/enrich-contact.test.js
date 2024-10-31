@@ -199,7 +199,7 @@ describe("Email enrichment", () => {
 
     await main(
       {
-        fields: {
+        inputFields: {
           senderEmail: "bill.gates@microsoft.com",
           senderName: "Bill Gates"
         }
@@ -221,7 +221,7 @@ describe("Email enrichment", () => {
         companyName: "Microsoft",
         companyEmployeeCount: 228581,
         companyFollowerCount: 22736947,
-        companySpecialities:
+        companySpecialties:
           "Business Software, Developer Tools, Home & Educational Software, Tablets, Search, Advertising, Servers, Windows Operating System, Windows Applications & Platforms, Smartphones, Cloud Computing, Quantum Computing, Future of Work, Productivity, AI, Artificial Intelligence, Machine Learning, Laptops, Mixed Reality, Virtual Reality, Gaming, Developers, IT Professional"
       }
     });
@@ -242,7 +242,7 @@ describe("Email enrichment", () => {
 
     await main(
       {
-        fields: {
+        inputFields: {
           senderEmail: "noemail@gmail.com",
           senderName: "No Name"
         }
@@ -263,7 +263,7 @@ describe("Email enrichment", () => {
         companyName: "",
         companyEmployeeCount: 0,
         companyFollowerCount: 0,
-        companySpecialities: ""
+        companySpecialties: ""
       }
     });
   });
