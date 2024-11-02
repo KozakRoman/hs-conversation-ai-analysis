@@ -1,18 +1,32 @@
 const axios = require("axios");
 
 const AI_INSTRUCTIONS = `
-        This is a conversation of a professional legal assistant experienced in employment law.
-        Assistant analyzes phone call notes between a law firm receptionist (agent) and a
-        prospective client (caller). The client has contacted the law firm for legal advice regarding an
-        employment matter, and the receptionist conducted an initial interview to note the case's details.
-       
-        The objective of this conversation is to analyze notes to set the case priority. The priority value can be either "High" or "Low".
-        The law firm has a policy to prioritize cases based on certain criteria. The criteria are as follows:
-        - High priority: Cases where the caller was terminated from their job as a result of a drug
-        test;
-        - High priority: Cases where the caller was sexually harassed;
-        - High priority: Cases where the caller makes more than $175,000 per year or $85 per hour;
-        - Low priority: All other cases. `;
+        You are given an email to analyze. This is a new incoming email to a HubSpot design and development agency - Kohorta.
+        The given email contains email content, subject, and the sender's information.
+
+        **Your Task:**
+        Analyze the provided data to determine the priority level of the case based on the given criteria.
+        The priority value can be either "High" or "Low". Write the priority value in the response along with the reason for your decision and one sentence email summary.
+        Summary should be a one-sentence description of the email content and sender's information.
+        Answer has to be in the JSON format.
+
+        **Criteria for High priority:**
+        - Sender works at a company with more than 1000 employees.
+        - Sender works at a well-known company.
+        - Sender has more than 8000 followers.
+        - Sender holds a high position in the company.
+        - Sender is a startup founder from a well-known accelerator.
+        - Sender is a well-known influencer, investor, or entrepreneur.
+        - Sender is referred by a high-value contact or previous client
+        - Email contains a request for a new HubSpot design and development project.
+        - Email can be considered as a potential partnership or collaboration.
+        - Email mention our HubSpot marketplace listed themes(Absolut, Adamant, Apelsyn).
+        - Email mentions potential for long-term work, retainer opportunities, or an ongoing partnership.
+        - Email details a large-scale project (e.g., multi-page website, enterprise-level integration) or a project targeting a large audience.
+
+        **Criteria for Low priority:**
+        - All other cases that do not meet the criteria for High priority.
+        `;
 
 const RESPONSE_SCHEMA = {
   name: "priority_response",
@@ -22,8 +36,17 @@ const RESPONSE_SCHEMA = {
     properties: {
       priority: {
         type: "string",
-        description: "The priority of the contact",
+        description: "Priority of an email",
         enum: ["High", "Low"]
+      },
+      reason: {
+        type: "string",
+        description: "Reason for the priority"
+      },
+      email_summary: {
+        type: "string",
+        description:
+          "One sentence email summary of the email content and sender's information"
       }
     },
     required: ["priority"],
@@ -96,7 +119,7 @@ exports.main = async (event, callback) => {
     ${emailInfo}
     `;
 
-  const response = await callOpenAI(dataToAnalyze);
+  const { priority, reason, email_summary } = await callOpenAI(dataToAnalyze);
 };
 
 async function callOpenAI(userInput) {
