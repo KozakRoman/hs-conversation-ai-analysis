@@ -26,6 +26,7 @@ exports.main = async (event, callback) => {
   }
 
   const messageText = message.text;
+  const emailSubject = message.subject;
   let senderName = "";
   let senderEmail = "";
   if (message.senders && message.senders.length > 0) {
@@ -42,6 +43,7 @@ exports.main = async (event, callback) => {
     outputFields: {
       isMessage: !!messageText,
       message: messageText,
+      emailSubject,
       isSenderName: !!senderName,
       senderName,
       isSenderEmail: !!senderEmail,

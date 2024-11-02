@@ -316,6 +316,7 @@ describe("Tread retrieval", () => {
       outputFields: {
         isMessage: true,
         message: messageResponse.data.results[0].text,
+        emailSubject: "Test",
         isSenderName: true,
         senderName: messageResponse.data.results[0].senders[0].name,
         isSenderEmail: true,
