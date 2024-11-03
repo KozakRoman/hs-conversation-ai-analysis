@@ -1,3 +1,35 @@
+/*
+    This is a HubSpot custom code action. It returns the first incoming message from a given thread ID.
+
+    Secret input fields:
+    - PRIVATE_APP_API_KEY: Your HubSpot Private App API key.
+    
+    Action input fields:
+    - hs_thread_id: The thread ID of the conversation.
+
+    Action output fields:
+    - isMessage: A boolean indicating if the message exists.
+    - message: The text content of the message.
+    - emailSubject: The subject of the email. It is optional and may not be available.
+    - isSenderName: A boolean indicating if the sender's name exists.
+    - senderName: The sender's name. It is optional and may not be available.
+    - isSenderEmail: A boolean indicating if the sender's email exists.
+    - senderEmail: The sender's email. It is optional and may not be available.
+
+    Example output:
+    {
+      "isMessage": true,
+      "message": "Hello, I have a question about your services.",
+      "emailSubject": "Question about services",
+      "isSenderName": true,
+      "senderName": "John Doe",
+      "isSenderEmail": true,
+      "senderEmail": "
+    }
+
+    For more information, refer to the HubSpot API documentation: https://developers.hubspot.com/beta-docs/guides/api/conversations/inbox-and-messages
+*/
+
 const axios = require("axios");
 
 exports.main = async (event, callback) => {
@@ -26,7 +58,7 @@ exports.main = async (event, callback) => {
   }
 
   const messageText = message.text;
-  const emailSubject = message.subject;
+  const emailSubject = message.subject || "";
   let senderName = "";
   let senderEmail = "";
   if (message.senders && message.senders.length > 0) {

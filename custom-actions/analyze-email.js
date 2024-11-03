@@ -1,3 +1,34 @@
+/*
+  This is a custom action that uses OpenAI's GPT-4 model to analyze an email and determine the priority level of the case based on the given criteria.
+
+  Secret input fields:
+  - OPENAI_API_KEY: Your OpenAI API key.
+
+  Action input fields:
+  - companyName: The name of the company.
+  - companyEmployeeCount: The number of employees in the company.
+  - companyFollowerCount: The number of followers of the company.
+  - companySpecialties: The specialties of the company.
+  - personFirstName: The first name of the person.
+  - personLastName: The last name of the person.
+  - personFollowerCount: The number of followers of the person.
+  - personSummary: The summary of the person's information.
+  - personLocation: The location of the person.
+  - message: The email content.
+
+  Action output fields:
+  - priority: The priority of the email (High or Low).
+  - reason: The reason for the priority.
+  - email_summary: A one-sentence email summary of the email content and sender's information.
+
+  Example output:
+  {
+    "priority": "High",
+    "reason": "The sender is a well-known influencer and the email contains a request for a new HubSpot design and development project.",
+    "email_summary": "Email from John Doe at Example Company regarding a new project."
+  }
+*/
+
 const axios = require("axios");
 
 const AI_INSTRUCTIONS = `
@@ -119,7 +150,35 @@ exports.main = async (event, callback) => {
     ${emailInfo}
     `;
 
-  const { priority, reason, email_summary } = await callOpenAI(dataToAnalyze);
+  const response = await callOpenAI(dataToAnalyze);
+
+  if (!response) {
+    callback({
+      outputFields: {}
+    });
+    return;
+  }
+
+  try {
+    response = JSON.parse(response);
+  } catch (error) {
+    console.error("Failed to parse the response from OpenAI");
+    console.error(response);
+    callback({
+      outputFields: {}
+    });
+    return;
+  }
+
+  const { priority, reason, email_summary } = response;
+
+  callback({
+    outputFields: {
+      priority,
+      reason,
+      email_summary
+    }
+  });
 };
 
 async function callOpenAI(userInput) {
