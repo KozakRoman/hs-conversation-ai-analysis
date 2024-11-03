@@ -80,7 +80,7 @@ const RESPONSE_SCHEMA = {
           "One sentence email summary of the email content and sender's information"
       }
     },
-    required: ["priority"],
+    required: ["priority", "reason", "email_summary"],
     additionalProperties: false
   }
 };
@@ -150,7 +150,7 @@ exports.main = async (event, callback) => {
     ${emailInfo}
     `;
 
-  const response = await callOpenAI(dataToAnalyze);
+  let response = await callOpenAI(dataToAnalyze);
 
   if (!response) {
     callback({
